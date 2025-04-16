@@ -97,6 +97,11 @@ model, history = run_experiment(
 - **Optimiseur le plus performant** : `Adam` avec dropout et augmentation
 - **Méthode d'évaluation** : `roc_auc_score (macro average)`
 
+<img width="1680" alt="image" src="https://github.com/user-attachments/assets/73c8970a-21a3-4445-8493-d6611054eec4" />
+<img width="1680" alt="image" src="https://github.com/user-attachments/assets/b6e2ad9b-a76f-4f8b-80c9-993bcd974211" />
+
+
+
 ---
 
 ## 🛠️ Améliorations futures
