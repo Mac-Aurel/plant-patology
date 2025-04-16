@@ -109,7 +109,7 @@ model, history = run_experiment(
 
 ## 👨‍💻 Auteur
 
-Projet développé par **Jean-Charles Houinato** Encadré dans le cadre de projets Deep Learning
+Projet développé par **Oladé LAOUROU** Encadré dans le cadre de projets Deep Learning
 
 ---
 
