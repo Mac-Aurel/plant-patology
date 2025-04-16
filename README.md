@@ -118,78 +118,110 @@ model, history = run_experiment(
 
 # Drone de Surveillance des Plantes avec ESP32-CAM
 
-Ce projet consiste à concevoir et assembler un drone de petite taille équipé d'une caméra ESP32-CAM pour capturer des images des plantes. Le drone utilise un capteur MPU6050 pour sa stabilisation, des moteurs brushless pour le vol et une batterie LiPo pour l'alimentation. Le but est de tester et d'optimiser la prise de photos et leur envoi vers un serveur pour analyse via un modèle d'intelligence artificielle (IA).
+Cette partie consiste à concevoir et assembler un drone de petite taille équipé d'une caméra ESP32-CAM pour capturer des images des plantes. Le drone utilise un capteur MPU6050 pour sa stabilisation, des moteurs brushless pour le vol et une batterie LiPo pour l'alimentation. Le but est de tester et d'optimiser la prise de photos et leur envoi vers un serveur pour analyse via un modèle d'intelligence artificielle (IA).
 
-## Composants principaux
 
-- **ESP32-CAM** : Caméra 2 MP utilisée pour prendre des photos des plantes. Elle est compacte et légère, idéale pour un drone de petite taille.
-- **MPU6050** (Gyroscope + Accéléromètre) : Utilisé pour la stabilisation du drone pendant son vol. Il mesure l'inclinaison et l'orientation du drone.
-- **Moteurs brushless et ESC** : Quatre moteurs brushless alimentés par des ESC pour contrôler la vitesse et les mouvements du drone.
-- **Batterie LiPo** : Fournit l'énergie nécessaire pour le vol du drone. La capacité typique varie de 1500mAh à 2200mAh.
-- **Récepteur RC 4 canaux** : Permet de contrôler le drone à distance via une radiocommande.
+## 📸 Fonctionnalités
 
-## Câblage et Assemblage du Drone
+- Capture automatique de photos toutes les 20 secondes avec ESP32-CAM
+- Stockage sur carte SD via SD_MMC
+- Stabilisation gyroscopique (MPU6050)
+- Commande via radiocommande RC (Throttle, Yaw, Pitch, Roll)
+- 4 moteurs contrôlés par ESC via la librairie Servo
+
+---
+
+## 🧰 Matériel requis
+
+| Composant | Quantité |
+|----------|----------|
+| ESP32-CAM | 1 |
+| Carte microSD + Adaptateur | 1 |
+| MPU6050 (Gyroscope/Accéléromètre) | 1 |
+| Moteurs brushless + ESC (x4) | 4 |
+| Récepteur RC 4 canaux | 1 |
+| Batterie LiPo | 1 |
+| Câbles Dupont, breadboard ou PCB perso | - |
+
+---
+
+## 🔌 Schéma de câblage (résumé)
 
 <img width="1001" alt="image" src="https://github.com/user-attachments/assets/184dd2ca-a9f2-4ac9-9d62-3ed77ea0c0c2" />
 <img width="1001" alt="image" src="https://github.com/user-attachments/assets/606a4ff1-26cb-41b6-b6df-041726362c6f" />
 
+### ESP32-CAM (Caméra)
 
-### Composants et connexions :
+- Se réfère à la configuration des GPIO dans le code.
+- Carte SD branchée sur les ports SD_MMC de l’ESP32-CAM.
 
-| Composant       | Connexion                     | Description                        |
-|-----------------|-------------------------------|------------------------------------|
-| **ESC1**        | Pin 3 (PWM)                   | Contrôle du moteur 1               |
-| **ESC2**        | Pin 5 (PWM)                   | Contrôle du moteur 2               |
-| **ESC3**        | Pin 6 (PWM)                   | Contrôle du moteur 3               |
-| **ESC4**        | Pin 9 (PWM)                   | Contrôle du moteur 4               |
-| **MPU6050**     | Pins SDA (21) et SCL (22)     | Stabilisation du drone             |
-| **ESP32-CAM**   | GPIO Pins                     | Capture des images des plantes     |
+### Contrôle moteur
 
-## Contrôle du Drone
+| ESC | Pin Arduino |
+|-----|-------------|
+| ESC1 | 3 |
+| ESC2 | 5 |
+| ESC3 | 6 |
+| ESC4 | 9 |
 
-Le drone est contrôlé par quatre axes :
+### Récepteur RC
 
-- **Yaw** : Rotation autour de l'axe vertical
-- **Pitch** : Inclinaison avant/arrière
-- **Roll** : Inclinaison latérale
-- **Throttle** : Accélération pour la montée/descente
+| Canal RC | Pin Arduino |
+|----------|-------------|
+| Roll     | 2 |
+| Pitch    | 4 |
+| Throttle | 7 |
+| Yaw      | 8 |
 
-## Logiciel et Commandes
+### MPU6050
 
-### Firmware du Drone
+Connecté en I2C :
+- SDA → A4 (ou selon la carte)
+- SCL → A5
 
-Le firmware du drone est développé avec **Arduino IDE** ou **PlatformIO**, en utilisant les bibliothèques suivantes :
+---
 
-- **ESP32 Wi-Fi** : Utilisé pour la capture d'images et l'envoi des données via Wi-Fi.
-- **Wire** : Utilisé pour la communication avec le capteur **MPU6050** via I2C.
+## ⚙️ Installation
 
-### Capture d'Images
+1. Installer les librairies suivantes :
+   - `esp_camera.h`
+   - `SD_MMC.h`
+   - `Servo.h`
+   - `MPU6050.h`
+   - `Wire.h`
 
-- Le drone prend une photo toutes les **20 secondes** pendant le vol.
-- Les images sont ensuite enregistrées sur une **carte SD** pour être envoyées au serveur d'analyse.
+2. Compiler et téléverser le code depuis l'IDE Arduino.
 
-## Tests à réaliser
+3. Préparer la carte SD (formatée en FAT32).
 
-Avant de déployer le drone, il est essentiel de réaliser certains tests pour s'assurer de sa stabilité et de la qualité de ses performances.
+4. Insérer la carte SD dans l’ESP32-CAM, brancher l’alim, et tout se fait automatiquement.
 
-### 1. Tester la stabilité du drone en vol
-Assurez-vous que le drone reste stable en vol avec un contrôle précis des axes (yaw, pitch, roll, throttle).
+---
 
-### 2. Vérifier la durée de vol avec la batterie LiPo
-La batterie LiPo devrait offrir une autonomie de **10-15 minutes**. Vérifiez cette durée lors d'un vol test complet.
+## 🛫 Utilisation
 
-### 3. Tester la qualité des images capturées
-Prenez des photos en vol et vérifiez la résolution et la clarté des images capturées pour s'assurer que la caméra ESP32-CAM est suffisante pour l'application.
+- Une photo est prise toutes les 20 secondes et sauvegardée sur la carte SD.
+- Les valeurs de mouvement du MPU6050 corrigent le signal RC en vol.
+- Les ESC sont armés à l'initialisation pour démarrer les moteurs.
 
-### 4. Optimiser l'envoi des photos au serveur pour analyse par IA
-Vérifiez que les images peuvent être envoyées efficacement au serveur pour analyse via un modèle d'IA. L'optimisation du processus d'envoi est cruciale pour un système de surveillance en temps réel.
+---
 
-## Installation
+## ⚠️ Avertissements
 
-1. **Assembler les composants du drone** : Suivez le schéma de câblage pour connecter l'ESP32-CAM, les moteurs brushless, l'ESC, et le MPU6050.
-2. **Configurer l'IDE** : Téléchargez et installez **Arduino IDE** ou **PlatformIO**.
-3. **Télécharger le code source** : Clonez ce repository et chargez le code sur l'ESP32.
-4. **Tester le drone** : Effectuez des tests pour vérifier les performances et la stabilité en vol.
+- Toujours tester sans hélices au début !
+- Le montage demande une bonne gestion de l’alimentation (courant élevé pour les ESC).
+- La gestion des ESC dépend de leur type (BLHeli, etc).
+- Pour l'IA, un modèle léger est recommandé pour l'exécution sur des plateformes embarquées comme l'ESP32, ou bien l'envoi des images vers un serveur pour traitement.
+
+---
+
+## 🧪 À faire
+
+- Ajouter du streaming live via WiFi (ESP32-CAM)
+- Kalman filter ou PID pour stabilisation plus avancée
+- Détection d'obstacle avec capteur ultrasons ?
+- Développer le modèle d'IA pour la reconnaissance de maladies (utiliser TensorFlow Lite ou un modèle préentraîné)
+- Tester l'intégration du modèle IA avec le drone (traitement des images sur le vol)
 
 ## Aide et Support
 
